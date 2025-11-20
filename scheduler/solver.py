@@ -42,8 +42,10 @@ def solve_shift_schedule(target_date):
         
         for h in hours:
             if req:
+                # 退勤時間が None なら「23時（閉店）」とみなす
+                req_end = req.end_time if req.end_time is not None else 23
                 # 希望があり、かつ「出勤可」で、かつ希望時間内ならOK
-                if req.availability and (req.start_time <= h < req.end_time):
+                if req.availability and (req.start_time <= h < req_end):
                     pass # 働いてもいい（何もしない＝0でも1でもいい）
                 else:
                     # 希望時間外なら絶対に働けない（0に固定）
