@@ -1,0 +1,5 @@
+Django>=5.0,<6.0
+ortools
+pandas
+django-bootstrap5
+jpholiday

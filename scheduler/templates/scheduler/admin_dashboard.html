@@ -1,0 +1,83 @@
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店長ダッシュボード</title>
+</head>
+<body class="container mt-4">
+
+    <h2 class="mb-4">🛠️ 店長用管理画面</h2>
+
+    <form method="get" class="mb-4 d-flex gap-2">
+        <input type="date" name="date" value="{{ target_date|date:'Y-m-d' }}" class="form-control w-auto">
+        <button type="submit" class="btn btn-secondary">表示切り替え</button>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">AIシフト作成</h5>
+                    <p class="card-text text-muted">
+                        この日のシフトを数理最適化エンジンで自動生成します。<br>
+                        (既存のシフトは上書きされます)
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="date" value="{{ target_date|date:'Y-m-d' }}">
+    
+                        <button type="submit" name="create_shift" class="btn btn-danger w-100">
+                            🚀 AIで作成を実行
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h4>📅 {{ target_date }} の確定シフト</h4>
+            {% if schedules %}
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>スタッフ</th>
+                            <th>時間</th>
+                            <th>ベテラン</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in schedules %}
+                        <tr>
+                            <td>{{ s.staff.name }}</td>
+                            <td>{{ s.start_time }}:00 〜 {{ s.end_time }}:00</td>
+                            <td>
+                                {% if s.staff.is_veteran %}
+                                    <span class="badge bg-warning text-dark">Veteran</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-warning">
+                    まだシフトが作成されていません。「AIで作成」を押してください。
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

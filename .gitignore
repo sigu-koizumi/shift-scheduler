@@ -1,0 +1,16 @@
+# Pythonのコンパイル済みファイル
+__pycache__/
+*.py[cod]
+
+# データベース（GitHubには上げないのが鉄則）
+db.sqlite3
+
+# OSのゴミファイル
+.DS_Store
+Thumbs.db
+
+# 環境変数など
+.env
+.venv
+env/
+venv/
